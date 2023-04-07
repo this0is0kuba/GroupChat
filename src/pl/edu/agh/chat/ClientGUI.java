@@ -79,11 +79,6 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener,
         frame.dispose();
     }
 
-    public static void main(String[] args) {
-        ClientGUI clientGUI = new ClientGUI("");
-        clientGUI.setWindow();
-    }
-
     @Override
     public void windowOpened(WindowEvent e) {}
 
