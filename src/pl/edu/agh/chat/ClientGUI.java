@@ -54,6 +54,9 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener,
     }
 
     public void actionSendMessage() {
+        if (textField.getText().isEmpty() || textField.getText().length() > 27)
+            return;
+
         String[] lines = textArea.getText().split("\n");
 
         if (lines.length == 17) {
@@ -63,8 +66,8 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener,
                 textArea.append(lines[i] + "\n");
         }
 
-        if (!textField.getText().isEmpty())
-            textArea.append(textField.getText() + "\n");
+
+        textArea.append(textField.getText() + "\n");
         textField.setText("");
     }
 
