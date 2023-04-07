@@ -9,6 +9,7 @@ public class Client {
     BufferedReader br;
     BufferedWriter bw;
     String userName;
+    ClientGUI clientGUI;
 
     public Client(int portNumber, String userName) {
         try {
@@ -16,6 +17,9 @@ public class Client {
             this.br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.userName = userName;
+
+            this.clientGUI = new ClientGUI(this.userName);
+            this.clientGUI.setWindow();
         }
         catch(IOException ioe) {
             ioe.printStackTrace();
@@ -34,10 +38,8 @@ public class Client {
             bw.newLine();
             bw.flush();
 
-            Scanner scanner = new Scanner(System.in);
-
             while (socket.isConnected()) {
-                String messageToSend = scanner.nextLine();
+                String messageToSend = returnMessageFromGUI();
                 bw.write(userName + ": " + messageToSend);
                 bw.newLine();
                 bw.flush();
@@ -59,7 +61,7 @@ public class Client {
 
                 try {
                     messageFromGroupChat = br.readLine();
-                    System.out.println(messageFromGroupChat);
+                    transferMessageFromGroupToGUI(messageFromGroupChat);
                 }
                 catch(IOException ioe) {
                     ioe.printStackTrace();
@@ -80,6 +82,35 @@ public class Client {
         catch(IOException ioe) {
             ioe.printStackTrace();
         }
+    }
+
+    public void transferMessageFromGroupToGUI(String messageFromGroupChat) {
+        String[] lines = clientGUI.textArea.getText().split("\n");
+
+        if (lines.length == 17) {
+            clientGUI.textArea.setText("");
+
+            for (int i = 1; i < 17; i++)
+                clientGUI.textArea.append(lines[i] + "\n");
+        }
+
+        clientGUI.textArea.append(messageFromGroupChat + "\n");
+    }
+
+    public String returnMessageFromGUI() {
+        while(clientGUI.currentMessage == null) {
+            try {
+                Thread.sleep(300);
+            }
+            catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+        }
+
+        String messageFromGUI = clientGUI.currentMessage;
+        clientGUI.currentMessage = null;
+
+        return messageFromGUI;
     }
 
     public static void main(String[] args) {

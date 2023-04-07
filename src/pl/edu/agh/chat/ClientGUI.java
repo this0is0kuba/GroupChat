@@ -8,9 +8,10 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener,
     JTextField textField;
     JButton submitButton;
     JTextArea textArea;
+    String currentMessage;
 
-    public ClientGUI() {
-        frame = new JFrame("chat");
+    public ClientGUI(String frameName) {
+        frame = new JFrame("chat (" + frameName + ")");
         textField = new JTextField(16);
         submitButton = new JButton("submit");
         textArea = new JTextArea(18, 20);
@@ -68,6 +69,8 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener,
 
 
         textArea.append(textField.getText() + "\n");
+        currentMessage = textField.getText();
+
         textField.setText("");
     }
 
@@ -77,7 +80,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener,
     }
 
     public static void main(String[] args) {
-        ClientGUI clientGUI = new ClientGUI();
+        ClientGUI clientGUI = new ClientGUI("");
         clientGUI.setWindow();
     }
 
