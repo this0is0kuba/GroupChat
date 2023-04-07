@@ -9,6 +9,7 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener,
     JButton submitButton;
     JTextArea textArea;
     String currentMessage;
+    final Object lock = new Object();
 
     public ClientGUI(String frameName) {
         frame = new JFrame("chat (" + frameName + ")");
@@ -55,23 +56,25 @@ public class ClientGUI extends JFrame implements ActionListener, WindowListener,
     }
 
     public void actionSendMessage() {
-        if (textField.getText().isEmpty() || textField.getText().length() > 27)
-            return;
+        synchronized (lock) {
+            if (textField.getText().isEmpty() || textField.getText().length() > 27)
+                return;
 
-        String[] lines = textArea.getText().split("\n");
+            String[] lines = textArea.getText().split("\n");
 
-        if (lines.length == 17) {
-            textArea.setText("");
+            if (lines.length == 17) {
+                textArea.setText("");
 
-            for (int i = 1; i < 17; i++)
-                textArea.append(lines[i] + "\n");
+                for (int i = 1; i < 17; i++)
+                    textArea.append(lines[i] + "\n");
+            }
+
+
+            textArea.append(textField.getText() + "\n");
+            currentMessage = textField.getText();
+
+            textField.setText("");
         }
-
-
-        textArea.append(textField.getText() + "\n");
-        currentMessage = textField.getText();
-
-        textField.setText("");
     }
 
     @Override

@@ -98,13 +98,22 @@ public class Client {
     }
 
     public String returnMessageFromGUI() {
-        while(clientGUI.currentMessage == null) {
+        boolean aux = true;
+
+        while(aux) {
+
             try {
-                Thread.sleep(300);
+                synchronized (clientGUI.lock) {
+                    if (clientGUI.currentMessage != null)
+                        aux = false;
+                }
+
+                Thread.sleep(100);
             }
             catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
+
         }
 
         String messageFromGUI = clientGUI.currentMessage;
